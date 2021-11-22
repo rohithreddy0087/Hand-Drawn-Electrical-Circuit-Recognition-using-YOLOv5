@@ -1,5 +1,4 @@
-opencv-python
+opencv-python--headless
 numpy
 matplotlib
 torch
-sklearn
