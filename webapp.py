@@ -38,7 +38,7 @@ def app():
         img = load_image(image_file)
         inp = np.array(img)
         rebuilt, comp, nodes, comp_list, jns_list, conn_list = main(inp,st)
-        cols = st.beta_columns(4)
+        cols = st.columns(4)
         cols[0].image(img, width=150, caption= 'Scanned circuit')
         cols[1].image(comp, width=150, caption= 'Detected components')
         cols[2].image(nodes, width=150, caption= 'Nodes and terminals')
