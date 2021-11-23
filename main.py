@@ -29,7 +29,7 @@ def main(img,st):
     for i in range(dim_matrix.shape[0]):
         dim = dim_matrix[i]
         start = (int(dim[0]),int(dim[1]))
-        end = (dim[2],dim[3])
+        end = (int(dim[2]),int(dim[3]))
         a_strings = ["%.2f" % x for x in start]
         st.write(f'### Dimension {", ".join(list(a_strings))}')
         a_strings = ["%.2f" % x for x in end]
