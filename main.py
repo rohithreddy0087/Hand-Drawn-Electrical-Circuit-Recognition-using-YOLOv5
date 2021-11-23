@@ -142,8 +142,8 @@ def main(img,st):
     for i in range(dim_matrix.shape[0]):
         cl = int(dim_matrix[i][5])
         dim = dim_matrix[i]
-        start = (dim[0],dim[1])
-        end = (dim[2],dim[3])
+        start = (int(dim[0]),int(dim[1]))
+        end = (int(dim[2]),int(dim[3]))
         cv2.rectangle(result, start, end, (255,0,0), 2)
         midx,midy = mid_point(dim[1],dim[0],dim[3],dim[2])
         cv2.putText(result,classes[cl]+str(count_ind[cl]+1), (int(midy),int(midx)),cv2.FONT_HERSHEY_PLAIN,1, (255, 0, 0), 1, cv2.LINE_AA)
