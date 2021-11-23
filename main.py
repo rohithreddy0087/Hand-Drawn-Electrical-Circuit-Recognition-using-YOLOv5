@@ -28,7 +28,7 @@ def main(img,st):
     main_img0 = cv2.cvtColor(main_img,cv2.COLOR_BGR2RGB)
     for i in range(dim_matrix.shape[0]):
         dim = dim_matrix[i]
-        start = (dim[0],dim[1])
+        start = (int(dim[0]),int(dim[1]))
         end = (dim[2],dim[3])
         a_strings = ["%.2f" % x for x in start]
         st.write(f'### Dimension {", ".join(list(a_strings))}')
