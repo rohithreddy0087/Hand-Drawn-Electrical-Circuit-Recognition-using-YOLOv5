@@ -18,7 +18,7 @@ from models.experimental import attempt_load
 from utils.datasets import letterbox
 from utils.general import check_img_size, non_max_suppression, scale_coords
 from utils.torch_utils import select_device
-
+import os
 
 def detect(img0):
     path = os.path.dirname(__file__)
