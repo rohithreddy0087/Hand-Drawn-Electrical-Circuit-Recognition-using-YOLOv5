@@ -60,7 +60,7 @@ def main(img,st):
         (cx,cy), r = cv2.minEnclosingCircle(cntr)
         comp_dim_tmp.append([cy,cx,length])
     h = len(comp_dim_tmp) - 2*dim_matrix.shape[0]
-    comp_dim_tmp = sorted(comp_dim_tmp, key = lambda x: x[2])[h:]    
+    comp_dim_tmp = sorted(comp_dim_tmp, key = lambda x: x[2])#[h:]    
     comp_dim = []
     for dim in comp_dim_tmp:
         comp_dim.append([dim[0],dim[1]])
