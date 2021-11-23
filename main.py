@@ -12,7 +12,7 @@ from recognizer import detect
 from node_detector import node_detector
 from mapping import *
 #if __name__ == "__main__":
-def main(img):
+def main(img,st):
     #img = cv2.imread(path)
     img = cv2.cvtColor(img,cv2.COLOR_RGB2BGR)
     main_img = np.copy(img)
@@ -20,7 +20,7 @@ def main(img):
     comp_removed = np.copy(gray)
     dim_matrix = detect(img)
     a_strings = ["%.2f" % x for x in dim_matrix[0]]
-    f'### Dimension {", ".join(list(a_strings))}'
+    st.write(f'### Dimension {", ".join(list(a_strings))}')
     classes = ['V','C','D','I','R']
     names = ['Voltage Source', 'Capacitor', 'Diode', 'Inductor', 'Resistor']
     boxes = np.zeros_like(gray)
