@@ -30,6 +30,10 @@ def main(img,st):
         dim = dim_matrix[i]
         start = (dim[0],dim[1])
         end = (dim[2],dim[3])
+        a_strings = ["%.2f" % x for x in start]
+        st.write(f'### Dimension {", ".join(list(a_strings))}')
+        a_strings = ["%.2f" % x for x in end]
+        st.write(f'### Dimension {", ".join(list(a_strings))}')
         boxes = cv2.rectangle(boxes, start, end, (255,0,0), 1) 
         boxes1 = cv2.rectangle(main_img0, start, end, (255,0,0), 2) 
         comp_removed[int(round(dim[1])):int(round(dim[3])),int(round(dim[0])):int(round(dim[2]))] = 255
