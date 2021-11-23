@@ -9,8 +9,7 @@ import numpy as np
 from PIL import Image 
 import os
 from main import main
-path = os.getcwd()
-print(path)
+path = os.path.dirname(__file__)
 def load_image(image_file):
     img = Image.open(image_file)
     return img 
@@ -27,7 +26,7 @@ def app():
         image_file = st.file_uploader("Upload Image",type=['png','jpeg','jpg'])
     else:
         no = choice.split()
-        image_file = 'project/Test set/'+ no[2] + '.png'
+        image_file = path + '/Test set/'+ no[2] + '.png'
 
     if image_file is not None :
         # file_type = "FileType:"+image_file.type
