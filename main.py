@@ -19,8 +19,8 @@ def main(img,st):
     gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     comp_removed = np.copy(gray)
     dim_matrix = detect(img)
-    a_strings = ["%.2f" % x for x in dim_matrix[0]]
-    st.write(f'### Dimension {", ".join(list(a_strings))}')
+    #a_strings = ["%.2f" % x for x in dim_matrix[0]]
+    #st.write(f'### Dimension {", ".join(list(a_strings))}')
     classes = ['V','C','D','I','R']
     names = ['Voltage Source', 'Capacitor', 'Diode', 'Inductor', 'Resistor']
     boxes = np.zeros_like(gray)
@@ -30,10 +30,6 @@ def main(img,st):
         dim = dim_matrix[i]
         start = (int(dim[0]),int(dim[1]))
         end = (int(dim[2]),int(dim[3]))
-        a_strings = ["%.2f" % x for x in start]
-        st.write(f'### Dimension {", ".join(list(a_strings))}')
-        a_strings = ["%.2f" % x for x in end]
-        st.write(f'### Dimension {", ".join(list(a_strings))}')
         boxes = cv2.rectangle(boxes, start, end, (255,0,0), 1) 
         boxes1 = cv2.rectangle(main_img0, start, end, (255,0,0), 2) 
         comp_removed[int(round(dim[1])):int(round(dim[3])),int(round(dim[0])):int(round(dim[2]))] = 255
