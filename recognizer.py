@@ -23,7 +23,7 @@ import os
 def detect(img0):
     path = os.path.dirname(__file__)
     with torch.no_grad():
-        weights, imgsz = path+'/yolov5/runs/train/yolov5s_results/weights/best.pt', 640
+        weights, imgsz = path+'/yolov5/weights/best.pt', 640
     
         device = select_device('cpu')
         conf_thres = 0.55
