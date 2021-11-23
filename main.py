@@ -19,6 +19,7 @@ def main(img):
     gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     comp_removed = np.copy(gray)
     dim_matrix = detect(img)
+    f'### Dimension {", ".join(dim_matrix)}'
     classes = ['V','C','D','I','R']
     names = ['Voltage Source', 'Capacitor', 'Diode', 'Inductor', 'Resistor']
     boxes = np.zeros_like(gray)
