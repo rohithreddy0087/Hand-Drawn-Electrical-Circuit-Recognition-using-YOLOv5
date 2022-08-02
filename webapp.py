@@ -27,7 +27,7 @@ def app():
         image_file = st.file_uploader("Upload Image",type=['png','jpeg','jpg'])
     else:
         no = choice.split()
-        image_file = path + '/Test_set/'+ no[2] + '.PNG'
+        image_file = 'Test_set/'+ no[2] + '.PNG'
 
     if image_file is not None :
         # file_type = "FileType:"+image_file.type
