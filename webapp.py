@@ -11,7 +11,7 @@ import os
 from main import main
 path = os.path.dirname(__file__)
 def load_image(image_file):
-    print(image_file)
+    print(path,image_file)
     img = Image.open(image_file)
     return img 
 
