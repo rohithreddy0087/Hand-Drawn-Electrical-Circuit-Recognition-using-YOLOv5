@@ -1,8 +1,8 @@
 opencv-python--headless
 numpy
 matplotlib
-torch
-torchvision
+torch==1.9.1
+torchvision==0.10.1
 PyYAML
 tqdm
 scipy
