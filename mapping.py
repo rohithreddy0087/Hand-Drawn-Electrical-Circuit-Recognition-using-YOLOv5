@@ -105,7 +105,7 @@ def mapping(dim_matrix,comp_dim,nodes):
     
     # mapping hanging nodes to nearest nodes
     node_node_map = []
-    for j ,_ in enumerate(hanging_nodes):
+    for i ,_ in enumerate(hanging_nodes):
         hn = hanging_nodes[i][0]
         cnt = 2-hanging_nodes[i][1]
         hnx,hny = nodes[hn][0],nodes[hn][1]
