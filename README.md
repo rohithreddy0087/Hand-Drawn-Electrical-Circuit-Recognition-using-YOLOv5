@@ -10,7 +10,7 @@ Journal Publication : [Springer Link](https://link.springer.com/article/10.1007/
 
 Implementation : [Website Link](https://rohithreddy0087-hand-drawn-electrical-circuit-rec-webapp-hnh3kr.streamlitapp.com/)
 
-![Implementation](utils/figs/implementation.png)
+[Implementation](utils/figs/implementation.png)
 
 ## Proposed method
 
@@ -21,7 +21,7 @@ without applying any morphological operation. The object detection model outputs
 classes of the components. Using these bounding boxes, the terminals and the nodes of the components can be
 traced. Using the detected classes, bounding boxes, terminals and nodes, the entire circuit schematic can be
 generated which can later be mapped to a suitable netlist.
-![framework](utils/figs/framework.png)
+[framework](utils/figs/framework.png)
 
 ### Detection of Circuit Components
 Proposed approach uses YOLOv5 to detect components.
@@ -32,12 +32,12 @@ detection and 2) adaptive thresholding of the scanned image. Based on the inters
 thresholded binarized circuit and the thresholded and binarized bounding boxes, the terminals can be identified.
 However, to improve the results, the centre of the intersections can be estimated using k-means clustering
 which results in a robust estimate of the terminal points.
-![terminals](utils/figs/terminals.png)
+[terminals](utils/figs/terminals.png)
 ### Node Recognition
 Nodes can be considered as the intersection points of horizontal and vertical
 lines. Hough Transform is employed to detect the lines. Then these lines are
 segmented based on the orientation of the line as mostly horizontal and vertical lines will be of interest to us.
-![nodes](utils/figs/terminals.png)
+[nodes](utils/figs/terminals.png)
 ### Circuit Schematic Generation
 In most of the electrical circuits, the terminals of a
 component are connected to the nearest node, but this
