@@ -1,20 +1,17 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Nov 28 20:48:33 2020
-
-@author: Dell
-"""
-from sklearn.datasets import make_blobs
 from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score
-from sklearn.preprocessing import StandardScaler
 import numpy as np
 
 def cluster(arr,num,iter_no):
+    """Finds the cluster centers by running KMeans unsupervised algorithm
 
-    # A list holds the SSE values for each k
-    # feat = np.array(arr)
-    # feat = np.squeeze(feat)
+    Args:
+        arr (numpy array): binary image
+        num (int): number of clusters
+        iter_no (int): number of iterations
+
+    Returns:
+        numpy array: consists of cluster centers
+    """
 
     kmeans = KMeans(
         init="random",

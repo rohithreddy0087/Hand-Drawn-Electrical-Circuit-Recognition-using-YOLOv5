@@ -1,28 +1,36 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Nov  2 22:27:55 2020
-
-@author: Dell
-"""
 
 import cv2 
 import numpy as np
-from matplotlib import pyplot as plt
 from recognizer import detect
 from node_detector import node_detector
-from mapping import *
-#if __name__ == "__main__":
-def main(img,st):
-    #img = cv2.imread(path)
+from mapping import mapping, mid_point
+
+def main(img):
+    """main function where all algorithms are called
+
+    Args:
+        img (numpy array): input image
+
+    Returns:
+        result (numpy array): final rebuilt image
+        boxes1 (numpy array): bounding boxes on given input image
+        main_img1 (numpy array): nodes and terminals on given input image
+        comp_list (List): list of all the components detected 
+        jns_list (List): list of all the junctions detected 
+        conn_list (List): list of connections traced 
+    """
+    # converting image to grayscale
     img = cv2.cvtColor(img,cv2.COLOR_RGB2BGR)
     main_img = np.copy(img)
     gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     comp_removed = np.copy(gray)
+
+    # running object detection model on image
     dim_matrix = detect(img)
-    #a_strings = ["%.2f" % x for x in dim_matrix[0]]
-    #st.write(f'### Dimension {", ".join(list(a_strings))}')
     classes = ['V','C','D','I','R']
     names = ['Voltage Source', 'Capacitor', 'Diode', 'Inductor', 'Resistor']
+
+    # making a copy of the image, plotting bboxes on image and removing detected bounding boxes
     boxes = np.zeros_like(gray)
     boxes1 = np.zeros_like(main_img)
     main_img0 = cv2.cvtColor(main_img,cv2.COLOR_BGR2RGB)
@@ -33,17 +41,11 @@ def main(img,st):
         boxes = cv2.rectangle(boxes, start, end, (255,0,0), 1) 
         boxes1 = cv2.rectangle(main_img0, start, end, (255,0,0), 2) 
         comp_removed[int(round(dim[1])):int(round(dim[3])),int(round(dim[0])):int(round(dim[2]))] = 255
-    # fig,ax = plt.subplots(nrows=1,ncols = 2)
-    # fig.set_figheight(8)
-    # fig.set_figwidth(8)
-    # ax[0].imshow(boxes1,'gray')
-    # ax[1].imshow(comp_removed,'gray')
-    # ax[0].set_xticks([])
-    # ax[0].set_yticks([])
-    # ax[1].set_xticks([])
-    # ax[1].set_yticks([])
-    # plt.savefig('cc0')
+    
+    # detecting nodes on the components removed image
     nodes = node_detector(comp_removed)
+
+    # detecting terminals using bboxes image and thresholded input image
     img = cv2.GaussianBlur(gray,(9,9),0)
     th = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,11,2)
     boxes = boxes == 255
@@ -51,8 +53,9 @@ def main(img,st):
     comp_pos1 = np.logical_not(np.logical_not(boxes)+th)
     comp_pos1 = comp_pos1.astype(np.uint8)
     comp_pos = comp_pos1*255
-    
     comp_dim_tmp = []
+
+    # using contour detection to find the exact centers of the terminals
     contours, hierarchy = cv2.findContours(comp_pos,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) 
     for i,cntr in enumerate(contours):
         M = cv2.moments(cntr)
@@ -67,73 +70,26 @@ def main(img,st):
     nodes = np.array(nodes)
     comp_dim = np.array(comp_dim)
     
-    # kernel = np.ones((5,5),np.uint8)
-    # comp_pos = cv2.dilate(comp_pos,kernel,iterations = 2)
-    
-    # fig,ax = plt.subplots(nrows=1,ncols = 2)
-    # fig.set_figheight(8)
-    # fig.set_figwidth(8)
-    # ax[0].imshow(boxes,'gray')
-    # ax[1].imshow(th,'gray')
-    # ax[0].set_xticks([])
-    # ax[0].set_yticks([])
-    # ax[1].set_xticks([])
-    # ax[1].set_yticks([])
-    # plt.savefig('cc1')
-    
-    # fig,ax = plt.subplots(nrows=1,ncols = 2)
-    # fig.set_figheight(8)
-    # fig.set_figwidth(8)
-    # ax[0].imshow(comp_pos1,'gray')
-    # ax[1].imshow(comp_pos,'gray')
-    # ax[0].set_xticks([])
-    # ax[0].set_yticks([])
-    # ax[1].set_xticks([])
-    # ax[1].set_yticks([])
-    # plt.savefig('cc2')
-    # tmp = np.where(comp_pos == 255)
-    # comp_dim_tmp = np.zeros((tmp[0].shape[0],2))
-    # for i in range(tmp[0].shape[0]):
-    #     comp_dim_tmp[i][0] = tmp[0][i]
-    #     comp_dim_tmp[i][1] = tmp[1][i]
-    # comp_dim = cluster(comp_dim_tmp,2*dim_matrix.shape[0],100)
+    # drawing terminals and nodes on the input image, to verify
     main_img1 = cv2.cvtColor(main_img,cv2.COLOR_BGR2RGB)
     for y,x in comp_dim:
         cv2.circle(main_img1,(int(x),int(y)), 1, (0,255,0), 5)
-    # fig,ax = plt.subplots(nrows=1,ncols = 1)
-    # fig.set_figheight(8)
-    # fig.set_figwidth(8)
-    # ax.imshow(main_img1)
-    # ax.set_xticks([])
-    # ax.set_yticks([])
-    # plt.savefig('cc3')
-    # main_img2 = cv2.cvtColor(main_img,cv2.COLOR_BGR2RGB)
-    # for x,y in nodes:
-    #     cv2.circle(main_img2,(int(y),int(x)), 1, (250,0,0), 5)
-    # fig,ax = plt.subplots(nrows=1,ncols = 1)
-    # fig.set_figheight(8)
-    # fig.set_figwidth(8)
-    # ax.imshow(main_img2)
-    # ax.set_xticks([])
-    # ax.set_yticks([])
-    # plt.savefig('cc4')
-    
     for x,y in nodes:
         cv2.circle(main_img1,(int(y),int(x)), 1, (250,0,0), 5)
-    # fig,ax = plt.subplots(nrows=1,ncols = 1)
-    # fig.set_figheight(8)
-    # fig.set_figwidth(8)
-    # ax.imshow(main_img1)
-    # ax.set_xticks([])
-    # ax.set_yticks([])
-    # plt.savefig('cc5')
+
+    # mapping nodes, terminals and components
     maps,node_comp_map,node_node_map = mapping(dim_matrix,comp_dim,nodes)
-            
+    
+    # generating .txt file with components and connections
     f = open("output.txt", "w")
+
+    # rebuilding circuit on a plain image
     result = np.ones_like(main_img)
     result = result * 255
+
+    # writes all the components present and draws them on a plain image
     f.write("Components in the circuit are: \n")
-    count_ind = [0]*5
+    count_ind = [0]*len(classes)
     comp_list = []
     for i in range(dim_matrix.shape[0]):
         cl = int(dim_matrix[i][5])
@@ -146,7 +102,8 @@ def main(img,st):
         f.write(names[cl]+" "+classes[cl]+str(count_ind[cl]+1)+"\n")
         comp_list.append(names[cl]+" "+classes[cl]+str(count_ind[cl]+1))
         count_ind[cl] = count_ind[cl] + 1
-        
+    
+    # writes all the nodes/junctions present and draws them on a plain image
     f.write("Junctions in the circuit are: \n")
     jns_list = []
     for i in range(nodes.shape[0]):
@@ -156,10 +113,11 @@ def main(img,st):
         cv2.circle(result,(int(y),int(x)), 1, (0,0,255), 6)
         cv2.putText(result, str(i), (int(y),int(x)),cv2.FONT_HERSHEY_PLAIN,1, (255, 0, 0), 1, cv2.LINE_AA) 
     
+    # writes all the connections present and draws them on a plain image
     f.write("Connections in the circuit are: \n")
     conn_list = []
-    count_ind = [0]*5
-    for i in range(len(maps)):
+    count_ind = [0]*len(classes)
+    for i,_ in enumerate(maps):
         cl = int(dim_matrix[i][5])
         n1 =  node_comp_map[2*i]
         n2 = node_comp_map[2*i+1]
@@ -174,18 +132,18 @@ def main(img,st):
         count_ind[cl] = count_ind[cl] + 1
     
     count_node_ind = [0]*len(node_node_map)
-    for i in range(len(node_node_map)):
+    for i,_ in enumerate(node_node_map):
         n1 = node_node_map[i][0]
         n2 = node_node_map[i][1]
         count = 0
-        for j in range(len(node_node_map)):
+        for j,_ in enumerate(node_node_map):
             if j != i:
                 n11 = node_node_map[j][0]
                 n21 = node_node_map[j][1]
                 if n1 == n21 and n2 == n11:
                     count = count+1+count_node_ind[j]
         count_node_ind[i] = count
-    for i in range(len(node_node_map)):
+    for i ,_ in enumerate(node_node_map):
         n1 = node_node_map[i][0]
         n2 = node_node_map[i][1]             
         if count_node_ind[i] < 2:
@@ -195,9 +153,4 @@ def main(img,st):
             end = (int(round(nodes[n2][1])),int(round(nodes[n2][0])))
             cv2.line(result,start,end,(0,0,0),2)
     f.close()
-    
-    plt.imshow(result)
-    plt.savefig('recognized_circuit')
     return result, boxes1, main_img1, comp_list, jns_list, conn_list
-
-#main('D:/project/Test set/1.PNG')

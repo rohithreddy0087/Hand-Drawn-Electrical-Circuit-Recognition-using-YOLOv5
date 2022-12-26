@@ -1,21 +1,19 @@
-# -*- coding: utf-8 -*-
 """
-Created on Fri Jun 18 23:13:01 2021
-
-@author: Dell
+Web app on streamlit
 """
-import streamlit as st
-import numpy as np
 from PIL import Image 
 import os
+
+import streamlit as st
+import numpy as np
 from main import main
+
 path = os.path.dirname(__file__)
-def load_image(image_file):
-    print(path,image_file)
-    img = Image.open(image_file)
-    return img 
 
 def app():
+    """
+    Streamlit page to showcase the implementation
+    """
     st.title("Hand drawn circuit recognition")
     menu = []
     menu.append('Upload image')
@@ -30,15 +28,11 @@ def app():
         image_file = 'Test_set/'+ no[2] + '.PNG'
 
     if image_file is not None :
-        # file_type = "FileType:"+image_file.type
-        # file_size = "FileSize:" +str(image_file.size)
-        #st.write(file_type)
-        #st.write(file_size)
         st.header("Different stages in recognition of the circuit")
         
-        img = load_image(image_file)
+        img = Image.open(image_file)
         inp = np.array(img)
-        rebuilt, comp, nodes, comp_list, jns_list, conn_list = main(inp,st)
+        rebuilt, comp, nodes, comp_list, jns_list, conn_list = main(inp)
         cols = st.columns(4)
         cols[0].image(img, width=150, caption= 'Scanned circuit')
         cols[1].image(comp, width=150, caption= 'Detected components')
@@ -47,13 +41,13 @@ def app():
         
         st.header("Description of the circuit")
         st.subheader("Components in the circuit are: ")
-        for i in range(len(comp_list)):
+        for i,_ in enumerate(comp_list):
             st.write(comp_list[i])
         st.subheader("Nodes in the circuit are: ")
-        for i in range(len(jns_list)):
+        for i,_ in enumerate(jns_list):
             st.write(jns_list[i])
         st.subheader("Connections in the circuit are: ")
-        for i in range(len(conn_list)):
+        for i,_ in enumerate(conn_list):
             st.write(conn_list[i])
         
 if __name__ == '__main__':

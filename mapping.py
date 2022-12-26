@@ -1,18 +1,50 @@
-# -*- coding: utf-8 -*-
 """
-Created on Sat Nov 28 23:06:34 2020
-
-@author: Dell
+This script contains algorithm for mapping nodes and terminals in given electrical circuit diagram
 """
 import numpy as np
 
 def distance(x1,y1,x2,y2):
+    """ Computes Euclidean distance
+
+    Args:
+        x1 (float): x coordinate of first point
+        y1 (float): y coordinate of first point
+        x2 (float): x coordinate of second point
+        y2 (float): y coordinate of second point
+
+    Returns:
+        float: distance between two points
+    """
     return np.sqrt((x1-x2)**2+(y1-y2)**2)
 
 def mid_point(x1,y1,x2,y2):
+    """ Computes mid point
+
+    Args:
+        x1 (float): x coordinate of first point
+        y1 (float): y coordinate of first point
+        x2 (float): x coordinate of second point
+        y2 (float): y coordinate of second point
+
+    Returns:
+        float: mid point of two points
+    """
     return (x1+x2)/2, (y1+y2)/2
 
 def mapping(dim_matrix,comp_dim,nodes):
+    """Maps nodes and terminals of an electrical circuit
+
+    Args:
+        dim_matrix (numpy array): consists of detected objects along with bounding boxes
+        comp_dim (numpy array): coordinates of all terminals 
+        nodes (numpy array): coordinates of all nodes
+
+    Returns:
+        maps (List): components-terminals map
+        node_comp_map (List): nodes-terminals map
+        node_node_map (List): node-node map
+    """
+    # mapping mid point of component to terminals of the components
     maps = []
     for i in range(dim_matrix.shape[0]):
         dim = dim_matrix[i]
@@ -25,22 +57,10 @@ def mapping(dim_matrix,comp_dim,nodes):
         sort_dist = sorted(d)
         sort_arr = np.array(sort_dist)
         maps.append(sort_arr[0:2,1])
-        
-    # node_comp_map = []
-    # maps_arr = np.array(maps)
-    # for i in range(comp_dim.shape[0]):
-    #     pntx,pnty = comp_dim[i][0],comp_dim[i][1]
-    #     rel = np.where(maps == i)
-    #     nc = []
-    #     for j in range(nodes.shape[0]):
-    #         nx,ny = nodes[j][0],nodes[j][1]
-    #         dist = distance(nx,ny,pntx,pnty)
-    #         nc.append((dist,j))
-    #     sort_dist = sorted(nc)
-    #     sort_arr = np.array(sort_dist)
-    #     node_comp_map.append(int(sort_arr[0,1]))
+    
+    # mapping terminals to the nearest nodes
     node_comp_map = []
-    for i in range(len(maps)):
+    for i ,_ in enumerate(maps):
         con1 = int(maps[i][0])
         con2 = int(maps[i][1])
         con_1x,con_1y = comp_dim[con1][0],comp_dim[con1][1]
@@ -68,24 +88,14 @@ def mapping(dim_matrix,comp_dim,nodes):
         else:
             node_comp_map.append(int(sort_arr1[0,1]))
             node_comp_map.append(int(sort_arr2[0,1]))
-    #     node_comp_map.append(int(sort_arr[0,1]))
-        
-    count_comp = [0]*5
-    for i in range(dim_matrix.shape[0]):
-        c1 = int(dim_matrix[i][5])
-        count = 0
-        for j in range(dim_matrix.shape[0]):
-            c2 = int(dim_matrix[j][5])
-            if c1 == c2 :
-                count = count + 1
-        count_comp[c1] = count
     
+    # checking for hanging nodes i.e., which are connected to less than two components    
     count_nodes = [0]*nodes.shape[0]
     hanging_nodes = []
     for i in range(nodes.shape[0]):
         n1 = i
         count = 0
-        for j in range(len(node_comp_map)):
+        for j ,_ in enumerate(node_comp_map):
             n2 = int(node_comp_map[j])
             if n1 == n2 :
                 count = count + 1
@@ -93,13 +103,14 @@ def mapping(dim_matrix,comp_dim,nodes):
         if count < 2:
             hanging_nodes.append((n1,count))
     
+    # mapping hanging nodes to nearest nodes
     node_node_map = []
-    for i in range(len(hanging_nodes)):
+    for j ,_ in enumerate(hanging_nodes):
         hn = hanging_nodes[i][0]
         cnt = 2-hanging_nodes[i][1]
         hnx,hny = nodes[hn][0],nodes[hn][1]
         hndist = []
-        for j in range(len(hanging_nodes)):
+        for j ,_ in enumerate(hanging_nodes):
             hn1 = hanging_nodes[j][0]
             nx,ny = nodes[hn1][0],nodes[hn1][1]
             dist = distance(nx,ny,hnx,hny)
