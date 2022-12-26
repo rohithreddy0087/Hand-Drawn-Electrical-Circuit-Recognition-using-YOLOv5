@@ -17,7 +17,7 @@ def detect(img0):
         path = os.path.dirname(__file__)
         weights, imgsz = path+'/yolov5/weights/best.pt', 640
     
-        device = select_device('0')
+        device = select_device('cpu')
         conf_thres = 0.55
         iou_thres = 0.55
         classes = None
